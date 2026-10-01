@@ -101,9 +101,9 @@ assertEqual(
   'a web app acronym does not fold in its generated id'
 )
 
-// omarchy-launch-webapp installs the same id shape for other Chromium-based
-// browsers too - the invariant is the 32-letter extension id, not the
-// "chrome-" prefix specifically.
+// The id shape comes from the browser's own "Install" menu item, which every
+// Chromium-based browser shares - the invariant is the 32-letter extension
+// id, not the "chrome-" prefix specifically.
 assert(
   search.fuzzyScore({ name: 'YouTube', id: 'brave-agimnkijcaahngcdmfeangaknmldooml-Profile 1' }, 'profile') < 0,
   'the generated-id exclusion is not specific to Chrome or the "Default" profile name'
@@ -112,7 +112,7 @@ assert(
 // A real, human-chosen id is unaffected - only the generated web app shape
 // is excluded.
 assert(
-  search.fuzzyScore({ name: 'Firefox', id: 'firefox' }, 'firefox') > 0,
+  search.fuzzyScore({ name: 'Calculator', id: 'org.gnome.Calculator' }, 'gnome') > 0,
   'a normal app id is still searchable'
 )
 
