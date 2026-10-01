@@ -191,6 +191,14 @@ assert(
   /searchId: root\.appLibrary\.searchableId\(entry\)/.test(menuQml),
   'menu app rows carry the searchable id from the shared app search'
 )
+// A cloned menu is handed PluginAppLibraryApi rather than AppLibrary, so every
+// method Menu.qml calls on it has to exist there and be wired in shell.qml.
+const pluginAppLibraryQml = fs.readFileSync(path.join(root, 'shell/services/PluginAppLibraryApi.qml'), 'utf8')
+const shellQml = fs.readFileSync(path.join(root, 'shell/shell.qml'), 'utf8')
+for (const [, method] of menuQml.matchAll(/root\.appLibrary\.(\w+)\(/g)) {
+  assert(new RegExp(`function ${method}\\(`).test(pluginAppLibraryQml), `a cloned menu's app library has ${method}`)
+  assert(new RegExp(`_${method}: function`).test(shellQml), `the shell wires ${method} into a cloned menu's app library`)
+}
 assert(
   /function resolveRoute\(input\) \{\s*\n\s*return MenuModel\.resolveRoute\(root\.items, root\.itemOrder, input\)\s*\n\s*\}/.test(menuQml),
   'menu delegates route resolution to the shared model'
